@@ -1,0 +1,281 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Three.js Game Engine Script API",
+    "description": "API for scripting objects in the Three.js Game Engine",
+    "version": "1.0.0"
+  },
+  "basePath": "/api",
+  "schemes": [
+    "https"
+  ],
+  "tags": [
+    {
+      "name": "Object",
+      "description": "3D Object manipulation"
+    },
+    {
+      "name": "Transform",
+      "description": "Position, rotation and scale operations"
+    },
+    {
+      "name": "Input",
+      "description": "Keyboard, mouse and gamepad input"
+    },
+    {
+      "name": "Events",
+      "description": "Event handling system"
+    },
+    {
+      "name": "Math",
+      "description": "Vector and math utilities"
+    },
+    {
+      "name": "Time",
+      "description": "Time operations"
+    }
+  ],
+  "paths": {
+    "/object": {
+      "get": {
+        "tags": [
+          "Object"
+        ],
+        "summary": "Get current object",
+        "description": "Returns the current object the script is attached to",
+        "responses": {
+          "200": {
+            "description": "The THREE.js object",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/object/position": {
+      "get": {
+        "tags": [
+          "Transform"
+        ],
+        "summary": "Get object position",
+        "responses": {
+          "200": {
+            "description": "Vector3 position",
+            "schema": {
+              "$ref": "#/definitions/Vector3"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Transform"
+        ],
+        "summary": "Set object position",
+        "parameters": [
+          {
+            "name": "position",
+            "in": "body",
+            "description": "New position",
+            "schema": {
+              "$ref": "#/definitions/Vector3"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Position updated"
+          }
+        }
+      }
+    },
+    "/object/rotation": {
+      "get": {
+        "tags": [
+          "Transform"
+        ],
+        "summary": "Get object rotation",
+        "responses": {
+          "200": {
+            "description": "Euler rotation",
+            "schema": {
+              "$ref": "#/definitions/Euler"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Transform"
+        ],
+        "summary": "Set object rotation",
+        "parameters": [
+          {
+            "name": "rotation",
+            "in": "body",
+            "description": "New rotation in Euler angles",
+            "schema": {
+              "$ref": "#/definitions/Euler"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rotation updated"
+          }
+        }
+      }
+    },
+    "/input/key/{keyCode}": {
+      "get": {
+        "tags": [
+          "Input"
+        ],
+        "summary": "Check if key is pressed",
+        "parameters": [
+          {
+            "name": "keyCode",
+            "in": "path",
+            "description": "Key code to check",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Key state",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "/input/mouse": {
+      "get": {
+        "tags": [
+          "Input"
+        ],
+        "summary": "Get mouse position",
+        "responses": {
+          "200": {
+            "description": "Mouse position",
+            "schema": {
+              "$ref": "#/definitions/Vector2"
+            }
+          }
+        }
+      }
+    },
+    "/events/emit": {
+      "post": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "Emit an event",
+        "parameters": [
+          {
+            "name": "event",
+            "in": "body",
+            "description": "Event data",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "data": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event emitted"
+          }
+        }
+      }
+    },
+    "/events/on": {
+      "post": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "Subscribe to an event",
+        "parameters": [
+          {
+            "name": "subscription",
+            "in": "body",
+            "description": "Event subscription",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eventName": {
+                  "type": "string"
+                },
+                "priority": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscription ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Vector3": {
+      "type": "object",
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "z": {
+          "type": "number"
+        }
+      }
+    },
+    "Vector2": {
+      "type": "object",
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        }
+      }
+    },
+    "Euler": {
+      "type": "object",
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "z": {
+          "type": "number"
+        },
+        "order": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
