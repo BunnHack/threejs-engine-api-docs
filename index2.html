@@ -1,25 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Three.js Game Engine API 文檔</title>
+  <title>强制刷新验证</title>
+  <script>
+    // 步骤 1：检查 JSON 文件是否能加载
+    fetch("script-api-docs.json")
+      .then(response => {
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        return response.text();
+      })
+      .then(text => {
+        console.log("JSON 文件内容:", text);
+        try {
+          JSON.parse(text);  // 验证是否为合法 JSON
+          console.log("JSON 格式正确");
+        } catch (e) {
+          console.error("JSON 解析失败:", e);
+        }
+      })
+      .catch(error => console.error("加载失败:", error));
+
+    // 步骤 2：动态加载 Swagger UI（避免缓存）
+    const loadSwagger = () => {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js?t=' + Date.now();
+      script.onload = () => {
+        SwaggerUIBundle({
+          url: "script-api-docs.json?" + Date.now(),  // 加时间戳防缓存
+          dom_id: '#swagger-ui'
+        });
+      };
+      document.head.appendChild(script);
+    };
+    loadSwagger();
+  </script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css">
 </head>
 <body>
   <div id="swagger-ui"></div>
-  
-  <!-- 引入 Swagger UI JS -->
-  <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
-  <script>
-    // 加載你的 OpenAPI/Swagger JSON 文件
-    SwaggerUIBundle({
-      url: "script-api-docs.json", // 確保路徑正確（相對或絕對）
-      dom_id: '#swagger-ui',
-      presets: [
-        SwaggerUIBundle.presets.apis,
-        SwaggerUIStandalonePreset
-      ],
-      layout: "StandaloneLayout"
-    });
-  </script>
 </body>
 </html>
